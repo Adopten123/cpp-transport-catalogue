@@ -70,13 +70,13 @@ namespace transport {
             }
         }
 
-        void ShowCatalogue(TransportCatalogue& catalogue) {
+        void ShowCatalogue(std::istream& input, std::ostream& output, const TransportCatalogue& catalogue) {
             int stat_request_count;
-            std::cin >> stat_request_count >> std::ws;
+            input >> stat_request_count >> std::ws;
             for (int i = 0; i < stat_request_count; ++i) {
                 std::string line;
-                getline(std::cin, line);
-                transport::reader::ParseAndPrintStat(catalogue, line, std::cout);
+                getline(input, line);
+                transport::reader::ParseAndPrintStat(catalogue, line, output);
             }
         }
     }

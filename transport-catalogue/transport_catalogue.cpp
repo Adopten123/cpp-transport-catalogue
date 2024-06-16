@@ -47,9 +47,12 @@ namespace transport {
 
 		double length = 0;
 
-		transport::geo::Coordinates crd(-1000, -1000);
+		uint8_t unreal_crd_value = 255;
+
+		transport::geo::Coordinates crd(unreal_crd_value, unreal_crd_value);
+
 		for (auto stop : bus->stops_) {
-			if (crd.lat == -1000) {
+			if (crd.lat == unreal_crd_value) {
 				crd = stop->coordinate_;
 			}
 			else {

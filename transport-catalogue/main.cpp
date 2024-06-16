@@ -9,7 +9,7 @@ using namespace std;
 int main() {
     transport::TransportCatalogue catalogue;
 
-    transport::reader::FillCatalogue(catalogue);
+    transport::reader::FillCatalogue(std::cin, catalogue);
 
-    transport::reader::ShowCatalogue(catalogue);
+    transport::reader::ShowCatalogue(std::cin, std::cout, catalogue);
 }

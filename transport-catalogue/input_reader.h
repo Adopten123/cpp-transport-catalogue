@@ -44,7 +44,7 @@ namespace transport {
             std::vector<CommandDescription> commands_;
         };
 
-        void FillCatalogue(TransportCatalogue& catalogue);
+        void FillCatalogue(std::istream& input, TransportCatalogue& catalogue);
 
     }
 }

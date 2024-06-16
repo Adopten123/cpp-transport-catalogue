@@ -136,15 +136,15 @@ namespace transport {
             return commands_;
         }
 
-        void FillCatalogue(TransportCatalogue& catalogue) {
+        void FillCatalogue(std::istream& input, TransportCatalogue& catalogue) {
             int base_request_count;
-            std::cin >> base_request_count >> std::ws;
+            input >> base_request_count >> std::ws;
 
             {
                 transport::reader::InputReader reader;
                 for (int i = 0; i < base_request_count; ++i) {
                     std::string line;
-                    getline(std::cin, line);
+                    getline(input, line);
                     reader.ParseLine(line);
                 }
                 reader.ApplyCommands(catalogue);
