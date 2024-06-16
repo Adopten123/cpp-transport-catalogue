@@ -33,7 +33,10 @@ namespace transport {
 		if (iterator != stop_to_buses_.end()) {
 			return iterator->second;
 		}
-		return std::set<Bus*, BusPtrHasher>();
+		else {
+			static const std::set<Bus*, BusPtrHasher> empty_set;
+			return empty_set;
+		}
 	}
 
 	BusInfo TransportCatalogue::GetBusInfo(const Bus* bus) const {

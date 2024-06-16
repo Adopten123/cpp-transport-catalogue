@@ -69,6 +69,16 @@ namespace transport {
                 ParseAndPrintStopStat(tansport_catalogue, request, output);
             }
         }
+
+        void ShowCatalogue(TransportCatalogue& catalogue) {
+            int stat_request_count;
+            std::cin >> stat_request_count >> std::ws;
+            for (int i = 0; i < stat_request_count; ++i) {
+                std::string line;
+                getline(std::cin, line);
+                transport::reader::ParseAndPrintStat(catalogue, line, std::cout);
+            }
+        }
     }
 }
 

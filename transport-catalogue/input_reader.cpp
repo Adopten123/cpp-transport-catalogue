@@ -135,6 +135,21 @@ namespace transport {
         std::vector<CommandDescription> InputReader::GetCommands() const {
             return commands_;
         }
+
+        void FillCatalogue(TransportCatalogue& catalogue) {
+            int base_request_count;
+            std::cin >> base_request_count >> std::ws;
+
+            {
+                transport::reader::InputReader reader;
+                for (int i = 0; i < base_request_count; ++i) {
+                    std::string line;
+                    getline(std::cin, line);
+                    reader.ParseLine(line);
+                }
+                reader.ApplyCommands(catalogue);
+            }
+        }
     }
 }
 

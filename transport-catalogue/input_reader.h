@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <ranges>
 #include <string>
 #include <string_view>
@@ -42,6 +43,9 @@ namespace transport {
         private:
             std::vector<CommandDescription> commands_;
         };
+
+        void FillCatalogue(TransportCatalogue& catalogue);
+
     }
 }
 
