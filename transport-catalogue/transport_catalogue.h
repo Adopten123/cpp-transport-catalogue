@@ -17,7 +17,7 @@ namespace transport{
 		Stop() = default;
 
 		Stop(const std::string& name, const transport::geo::Coordinates& coordinate) :
-			name_(std::move(name)), coordinate_(std::move(coordinate)) {}
+			name_(name), coordinate_(coordinate) {}
 
 		std::string name_;
 		transport::geo::Coordinates coordinate_;
@@ -29,7 +29,7 @@ namespace transport{
 		Bus() = default;
 
 		Bus(const std::string& name, const std::vector<const Stop*>& stops) :
-			name_(std::move(name)), stops_(stops) {
+			name_(name), stops_(stops) {
 		}
 
 		bool operator<(Bus& other) {
@@ -68,7 +68,7 @@ namespace transport{
 		const Stop* GetStop(std::string_view name) const;
 		const Bus* GetBus(std::string_view name) const;
 
-		const std::set<Bus*, BusPtrHasher> GetBusesByStop(std::string_view name) const;
+		const std::set<Bus*, BusPtrHasher>& GetBusesByStop(std::string_view name) const;
 
 		BusInfo GetBusInfo(const Bus* bus) const;
 

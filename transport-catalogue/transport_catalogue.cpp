@@ -28,7 +28,7 @@ namespace transport {
 		return busname_to_bus_.count(name) ? busname_to_bus_.at(name) : nullptr;
 	}
 
-	const std::set<Bus*, BusPtrHasher> TransportCatalogue::GetBusesByStop(std::string_view name) const {
+	const std::set<Bus*, BusPtrHasher>& TransportCatalogue::GetBusesByStop(std::string_view name) const {
 		auto iterator = stop_to_buses_.find(name);
 		if (iterator != stop_to_buses_.end()) {
 			return iterator->second;
