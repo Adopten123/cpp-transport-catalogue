@@ -1,6 +1,8 @@
 #include "transport_catalogue.h"
 
+#include <algorithm>
 #include <set>
+
 
 namespace transport {
 
@@ -21,6 +23,10 @@ namespace transport {
 		}
 	}
 
+	void TransportCatalogue::SetDistance(Stop* from, Stop* to, size_t distance) {
+		distances_[std::make_pair(from, to)] = distance;
+	}
+
 	const Stop* TransportCatalogue::GetStop(std::string_view name) const {
 		return stopname_to_stop_.count(name) ? stopname_to_stop_.at(name) : nullptr;
 	}
@@ -39,29 +45,42 @@ namespace transport {
 		}
 	}
 
+	size_t TransportCatalogue::GetDistanceDirectly(Stop* from, Stop* to) const{
+		if (distances_.count(std::make_pair(from, to)) > 0) {
+			return distances_.at(std::make_pair(from, to));
+		}
+		else {
+			return 0U;
+		}
+	}
+
+	size_t TransportCatalogue::GetDistance(Stop* from, Stop* to) const {
+		size_t result = GetDistanceDirectly(from, to);
+		return (result > 0 ? result : GetDistanceDirectly(to, from));
+	}
+
 	BusInfo TransportCatalogue::GetBusInfo(const Bus* bus) const {
-		size_t stop_count = bus->stops_.size();
+
+		BusInfo bus_info;
+
+		bus_info.stops_count_ = bus->stops_.size();
 
 		std::set<const Stop*> uniq_stops(bus->stops_.begin(), bus->stops_.end());
-		size_t uniq_stop_count = std::move(uniq_stops).size();
+		bus_info.unique_stops_count_ = uniq_stops.size();
 
-		double length = 0;
+		for (size_t i = 1; i < bus->stops_.size(); ++i) {
+			Stop* prev_stop = const_cast<Stop*>(bus->stops_[i - 1]);
+			Stop* curr_stop = const_cast<Stop*>(bus->stops_[i]);
 
-		uint8_t unreal_crd_value = 255;
-
-		transport::geo::Coordinates crd(unreal_crd_value, unreal_crd_value);
-
-		for (auto stop : bus->stops_) {
-			if (crd.lat == unreal_crd_value) {
-				crd = stop->coordinate_;
-			}
-			else {
-				length += transport::geo::ComputeDistance(crd, stop->coordinate_);
-				crd = stop->coordinate_;
-			}
+			bus_info.route_length_ += GetDistance(prev_stop, curr_stop);
+			bus_info.geo_route_length_ += transport::geo::ComputeDistance(prev_stop->coordinate_, curr_stop->coordinate_);
 		}
 
-		return BusInfo(stop_count, uniq_stop_count, length);
+		bus_info.curvature_ = bus_info.route_length_ / bus_info.geo_route_length_;
+
+		return bus_info;
 	}
+
+
 
 }

@@ -41,15 +41,17 @@ namespace transport{
 		std::vector<const Stop*> stops_;
 	};
 
-	struct BusInfo
-	{
-		BusInfo(size_t stops_count, size_t unique_stops_count, double route_length) :
-			stops_count_(stops_count), unique_stops_count_(unique_stops_count), route_length_(route_length) {
-		}
+	struct BusInfo {
+		BusInfo() = default;
 
-		size_t stops_count_;
-		size_t unique_stops_count_;
-		double route_length_;
+		BusInfo(size_t stops_count, size_t unique_stops_count, double route_length, double curvature) :
+			stops_count_(stops_count), unique_stops_count_(unique_stops_count), route_length_(route_length), curvature_(curvature) {}
+
+		size_t stops_count_ = 0u;
+		size_t unique_stops_count_ = 0u;
+		double geo_route_length_ = 0.0;
+		double route_length_ = 0.0;
+		double curvature_ = 0.0;
 	};
 
 	struct BusPtrHasher {
@@ -58,18 +60,26 @@ namespace transport{
 		};
 	};
 
+	struct PairHasher {
+		std::size_t operator()(const std::pair<Stop*, Stop*>& pair) const {
+			return std::hash<const void*>{}(static_cast<const void*>(pair.first)) * 17 + std::hash<const void*>{}(static_cast<const void*>(pair.second));
+		}
+	};
 
 	class TransportCatalogue {
 	public:
 
 		void AddStop(Stop&& stop);
 		void AddBus(Bus&& bus);
+		void SetDistance(Stop* from, Stop* to, size_t distance);
 
 		const Stop* GetStop(std::string_view name) const;
 		const Bus* GetBus(std::string_view name) const;
 
 		const std::set<Bus*, BusPtrHasher>& GetBusesByStop(std::string_view name) const;
 
+		size_t GetDistanceDirectly(Stop* from, Stop* to) const;
+		size_t GetDistance(Stop* from, Stop* to) const;
 		BusInfo GetBusInfo(const Bus* bus) const;
 
 	private:
@@ -81,7 +91,7 @@ namespace transport{
 		std::unordered_map<std::string_view, Bus*> busname_to_bus_;
 
 		std::unordered_map<std::string_view, std::set<Bus*, BusPtrHasher> > stop_to_buses_;
-
+		std::unordered_map<std::pair<Stop*, Stop*>, size_t, PairHasher> distances_;
 
 	};
 

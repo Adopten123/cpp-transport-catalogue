@@ -5,6 +5,7 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include <unordered_map>
 
 #include "geo.h"
 #include "transport_catalogue.h"
@@ -12,7 +13,6 @@
 namespace transport {
     namespace reader {
         struct CommandDescription {
-            // Определяет, задана ли команда (поле command непустое)
             explicit operator bool() const {
                 return !command.empty();
             }
@@ -21,21 +21,16 @@ namespace transport {
                 return !operator bool();
             }
 
-            std::string command;      // Название команды
-            std::string id;           // id маршрута или остановки
-            std::string description;  // Параметры команды
+            std::string command;
+            std::string id;
+            std::string description;
         };
 
         class InputReader {
         public:
-            /**
-             * Парсит строку в структуру CommandDescription и сохраняет результат в commands_
-             */
             void ParseLine(std::string_view line);
 
-            /**
-             * Наполняет данными транспортный справочник, используя команды из commands_
-             */
+            void FillDistances(TransportCatalogue& catalogue) const;
             void ApplyCommands(TransportCatalogue& catalogue) const;
 
             std::vector<CommandDescription> GetCommands() const;
@@ -46,8 +41,6 @@ namespace transport {
 
         void FillCatalogue(std::istream& input, TransportCatalogue& catalogue);
 
+        std::unordered_map<std::string, size_t> ParseDistances(std::string_view str);
     }
 }
-
-
-
