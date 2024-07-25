@@ -45,7 +45,8 @@ namespace transport{
 		BusInfo() = default;
 
 		BusInfo(size_t stops_count, size_t unique_stops_count, double route_length, double curvature) :
-			stops_count_(stops_count), unique_stops_count_(unique_stops_count), route_length_(route_length), curvature_(curvature) {}
+			stops_count_(stops_count), unique_stops_count_(unique_stops_count), 
+			route_length_(route_length), curvature_(curvature) {}
 
 		size_t stops_count_ = 0u;
 		size_t unique_stops_count_ = 0u;
@@ -62,7 +63,8 @@ namespace transport{
 
 	struct PairHasher {
 		std::size_t operator()(const std::pair<Stop*, Stop*>& pair) const {
-			return std::hash<const void*>{}(static_cast<const void*>(pair.first)) * 17 + std::hash<const void*>{}(static_cast<const void*>(pair.second));
+			return std::hash<const void*>{}(static_cast<const void*>(pair.first)) * 17
+				+ std::hash<const void*>{}(static_cast<const void*>(pair.second));
 		}
 	};
 

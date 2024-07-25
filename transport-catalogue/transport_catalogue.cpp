@@ -28,10 +28,13 @@ namespace transport {
 	}
 
 	const Stop* TransportCatalogue::GetStop(std::string_view name) const {
-		return stopname_to_stop_.count(name) ? stopname_to_stop_.at(name) : nullptr;
+		auto pair = stopname_to_stop_.find(name);
+		return pair != stopname_to_stop_.end() ? pair->second : nullptr;
 	}
+
 	const Bus* TransportCatalogue::GetBus(std::string_view name) const {
-		return busname_to_bus_.count(name) ? busname_to_bus_.at(name) : nullptr;
+		auto pair = busname_to_bus_.find(name);
+		return pair != busname_to_bus_.end() ? pair->second : nullptr;
 	}
 
 	const std::set<Bus*, BusPtrHasher>& TransportCatalogue::GetBusesByStop(std::string_view name) const {
