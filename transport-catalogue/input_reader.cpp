@@ -117,8 +117,8 @@ namespace transport {
                     auto distances = ParseDistances(distances_str);
 
                     for (const auto& [neighbor_stop, distance] : distances) {
-                        catalogue.SetDistance(const_cast<transport::Stop*>(catalogue.GetStop(command.id)),
-                            const_cast<transport::Stop*>(catalogue.GetStop(neighbor_stop)), distance);
+                        catalogue.SetDistance(const_cast<domain::Stop*>(catalogue.GetStop(command.id)),
+                            const_cast<domain::Stop*>(catalogue.GetStop(neighbor_stop)), distance);
                     }
                 }
             }
@@ -147,7 +147,7 @@ namespace transport {
 
             for (const CommandDescription& command : bus_commands) {
                 std::vector<std::string_view> temp_stops = ParseRoute(command.description);
-                std::vector<const Stop*> bus_stops;
+                std::vector<const domain::Stop*> bus_stops;
 
                 for (std::string_view stop : temp_stops) {
                     bus_stops.push_back(catalogue.GetStop(stop));

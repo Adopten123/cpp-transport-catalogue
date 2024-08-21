@@ -5,10 +5,10 @@
 
 namespace transport {
     namespace reader {
-        std::string BusesToString(const std::set<Bus*, BusPtrHasher>& buses) {
+        std::string BusesToString(const std::set<domain::Bus*, BusPtrHasher>& buses) {
             std::string result = "";
 
-            for (const Bus* bus : buses) {
+            for (const domain::Bus* bus : buses) {
                 using namespace std;
                 result += bus->name_;
                 result += " "s;
@@ -21,10 +21,10 @@ namespace transport {
             using namespace std;
 
             string_view bus_name = request.substr(request.find(' ') + 1);
-            const Bus* bus = tansport_catalogue.GetBus(bus_name);
+            const domain::Bus* bus = tansport_catalogue.GetBus(bus_name);
 
             if (bus) {
-                BusInfo businfo = tansport_catalogue.GetBusInfo(bus);
+                domain::BusInfo businfo = tansport_catalogue.GetBusInfo(bus);
 
                 output << "Bus "s << bus_name << ": "s << to_string(businfo.stops_count_) << " stops on route, "s
                     << to_string(businfo.unique_stops_count_) << " unique stops, "s << to_string(businfo.route_length_) << " route length, "s
@@ -41,7 +41,7 @@ namespace transport {
             using namespace std;
 
             std::string_view stop_name = request.substr(request.find(' ') + 1);
-            const Stop* stop = tansport_catalogue.GetStop(stop_name);
+            const domain::Stop* stop = tansport_catalogue.GetStop(stop_name);
 
             if (stop) {
                 if (tansport_catalogue.GetBusesByStop(stop_name).size() == 0) {

@@ -1,15 +1,10 @@
-#include <iostream>
-#include <string>
-
-#include "input_reader.h"
-#include "stat_reader.h"
-
-using namespace std;
-
 int main() {
-    transport::TransportCatalogue catalogue;
-
-    transport::reader::FillCatalogue(std::cin, catalogue);
-
-    transport::reader::ShowCatalogue(std::cin, std::cout, catalogue);
+    /*
+     * Примерная структура программы:
+     *
+     * Считать JSON из stdin
+     * Построить на его основе JSON базу данных транспортного справочника
+     * Выполнить запросы к справочнику, находящиеся в массива "stat_requests", построив JSON-массив
+     * с ответами Вывести в stdout ответы в виде JSON
+     */
 }

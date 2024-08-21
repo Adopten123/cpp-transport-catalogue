@@ -8,7 +8,7 @@
 
 namespace transport {
     namespace reader {
-        std::string BusesToString(const std::set<Bus*, BusPtrHasher>& buses);
+        std::string BusesToString(const std::set<domain::Bus*, BusPtrHasher>& buses);
 
         void ParseAndPrintBusStat(const TransportCatalogue& tansport_catalogue, std::string_view request,
             std::ostream& output);
