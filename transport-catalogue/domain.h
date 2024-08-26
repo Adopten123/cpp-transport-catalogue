@@ -41,6 +41,7 @@ namespace domain {
 		bool operator<(Bus& other);
 
 		std::string name_;
+		bool is_circular_;
 		std::vector<const Stop*> stops_;
 	};
 

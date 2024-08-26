@@ -5,7 +5,7 @@
 
 
 #include <deque>
-#include <set>
+#include <unordered_set>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -14,6 +14,7 @@
 namespace transport{
 
 	struct BusPtrHasher {
+
 		bool operator()(domain::Bus* lhs, domain::Bus* rhs) const {
 			return *lhs < *rhs;
 		};

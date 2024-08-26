@@ -10,7 +10,27 @@
 
 namespace transport {
     namespace reader {
-        class JsonReader {
+        class JSONreader {
+        public:
+
+            void ProcessJSON(TransportCatalogue& tc, RequestHandler& rh,
+                std::istream& input, std::ostream& output);
+
+        private:
+
+            void AddStopData(TransportCatalogue& tc, const json::Dict& json_stop);
+
+            void AddStopDistance(TransportCatalogue& tc, const json::Dict& json_stop);
+
+            void AddBusData(TransportCatalogue& tc, const json::Dict& json_bus);
+
+            void FillCatalogue(TransportCatalogue& tc, const json::Array& json_arr);
+
+            const json::Node ProcessStopQuery(RequestHandler& rh, const json::Dict& json_stop);
+            const json::Node ProcessBusQuery(RequestHandler& rh, const json::Dict& json_bus);
+
+            void ProcessQueries(std::ostream& out, RequestHandler& rh, const json::Array& json_arr);
+
 
         };
     }

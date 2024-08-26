@@ -20,7 +20,6 @@ namespace json {
             using namespace std::literals;
 
             std::string parsed_num;
-            char c;
 
             auto read_char = [&parsed_num, &input]() {
                 parsed_num += static_cast<char>(input.get());

@@ -1,6 +1,9 @@
 #pragma once
+
+#include "transport_catalogue.h"
+
 #include <optional>
-#include <unordered_set>
+#include <set>
 
 /*
  * Здесь можно было бы разместить код обработчика запросов к базе, содержащего логику, которую не
@@ -24,12 +27,12 @@ namespace transport {
     public:
         // MapRenderer понадобится в следующей части итогового проекта
         //RequestHandler(const TransportCatalogue& db, const renderer::MapRenderer& renderer);
-
+        RequestHandler(const TransportCatalogue& db);
         // Возвращает информацию о маршруте (запрос Bus)
         std::optional<domain::BusInfo> GetBusStat(const std::string_view& bus_name) const;
 
         // Возвращает маршруты, проходящие через
-        //const std::unordered_set<domain::BusPtr>* GetBusesByStop(const std::string_view& stop_name) const;
+        const std::set<domain::Bus*, BusPtrHasher>* GetBusesByStop(const std::string_view& stop_name) const;
 
         // Этот метод будет нужен в следующей части итогового проекта
         //svg::Document RenderMap() const;
