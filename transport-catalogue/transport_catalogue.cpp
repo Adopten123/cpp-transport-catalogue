@@ -15,12 +15,24 @@ namespace transport {
 	}
 
 	void TransportCatalogue::AddBus(domain::Bus&& bus) {
+		
+		if (!bus.is_circular_) {
+
+			std::vector<const domain::Stop*> tmp_stops;
+			std::copy(bus.stops_.begin(), bus.stops_.end(), tmp_stops.begin());
+
+			for (size_t i = tmp_stops.size() - 2; i != 0; i--) {
+				AddStop(std::move(*const_cast<domain::Stop*>(tmp_stops[i])));
+			}
+		}
+
 		buses_.push_back(std::move(bus));
 		busname_to_bus_[buses_.back().name_] = &buses_.back();
 
 		for (const domain::Stop* stop : buses_.back().stops_) {
 			stop_to_buses_[stop->name_].insert(&buses_.back());
 		}
+
 	}
 
 	void TransportCatalogue::SetDistance(domain::Stop* from, domain::Stop* to, size_t distance) {

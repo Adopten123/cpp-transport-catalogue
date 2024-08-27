@@ -57,7 +57,7 @@ namespace transport {
 
 				const auto request_type = item.AsMap().find("type"s);
 
-				if (request_type != item.AsMap().end() and request_type->second.AsString() == "Bus"s) {
+				if (request_type != item.AsMap().end()) {
 					AddBusData(tc, item.AsMap());
 				}
 
@@ -146,7 +146,7 @@ namespace transport {
 			if (bus_query_ptr) {
 				return json::Dict{ {"curvature"s, bus_query_ptr->curvature_},
 					  {"request_id"s, json_bus.at("id"s).AsInt()},
-					  {"route_length"s, static_cast<int>(bus_query_ptr->geo_route_length_)},
+					  {"route_length"s, static_cast<int>(bus_query_ptr->route_length_)},
 					  {"stop_count"s, static_cast<int>(bus_query_ptr->stops_count_)},
 					  {"unique_stop_count"s, static_cast<int>(bus_query_ptr->unique_stops_count_)} };
 			}
