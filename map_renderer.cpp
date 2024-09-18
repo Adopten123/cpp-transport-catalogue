@@ -150,12 +150,14 @@ namespace transport {
 				result.push_back(underlabel);
 				result.push_back(text);
 
-				if (bus->is_circular_ == false and bus->stops_.size() >= 2) {
+				if (bus->is_circular_ == false
+					and bus->stops_[0] != bus->stops_[bus->stops_.size() / 2]) {
+
 					svg::Text clone_text{ text };
 					svg::Text clone_underlabel{ underlabel };
 
-					clone_text.SetPosition(sp(bus->stops_[bus->stops_.size() - 2]->coordinate_));
-					clone_underlabel.SetPosition(sp(bus->stops_[bus->stops_.size() - 2]->coordinate_));
+					clone_text.SetPosition(sp(bus->stops_[bus->stops_.size() / 2]->coordinate_));
+					clone_underlabel.SetPosition(sp(bus->stops_[bus->stops_.size() / 2]->coordinate_));
 
 					result.push_back(clone_underlabel);
 					result.push_back(clone_text);

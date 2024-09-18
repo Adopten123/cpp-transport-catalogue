@@ -116,30 +116,31 @@ namespace svg {
 
     struct OstreamColorPrinter
     {
+        std::ostream& os;
 
         void operator()(std::monostate) const {
             using namespace std::literals;
-            std::cout << "none"sv;
+            os << "none"sv;
         }
 
         void operator()(std::string color) const {
             using namespace std::literals;
-            std::cout << color;
+            os << color;
         }
 
         void operator()(Rgb color) const {
             using namespace std::literals;
-            std::cout << "rgb("sv << static_cast<int>(color.red) << ","sv << static_cast<int>(color.green) << ","sv << static_cast<int>(color.blue) << ")"sv;
+            os << "rgb("sv << static_cast<int>(color.red) << ","sv << static_cast<int>(color.green) << ","sv << static_cast<int>(color.blue) << ")"sv;
         }
 
         void operator()(Rgba color) const {
             using namespace std::literals;
-            std::cout << "rgba("sv << static_cast<int>(color.red) << ","sv << static_cast<int>(color.green) << ","sv << static_cast<int>(color.blue) << ","sv << color.opacity << ")"sv;
+            os << "rgba("sv << static_cast<int>(color.red) << ","sv << static_cast<int>(color.green) << ","sv << static_cast<int>(color.blue) << ","sv << color.opacity << ")"sv;
         }
     };
 
     inline std::ostream& operator<< (std::ostream& os, Color color) {
-        std::visit(OstreamColorPrinter{}, color);
+        std::visit(OstreamColorPrinter{ os }, color);
         return os;
     }
 

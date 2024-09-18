@@ -9,13 +9,15 @@
 #include "request_handler.h"
 #include "transport_catalogue.h"
 
+#include <sstream>
+
 namespace transport {
     namespace reader {
         class JSONreader {
         public:
 
             void ProcessJSON(TransportCatalogue& tc, RequestHandler& rh, renderer::MapRenderer& mr,
-                std::istream& input/*, std::ostream& output*/);
+                std::istream& input, std::ostream& output);
 
         private:
 
@@ -29,8 +31,9 @@ namespace transport {
 
             const json::Node ProcessStopQuery(RequestHandler& rh, const json::Dict& json_stop);
             const json::Node ProcessBusQuery(RequestHandler& rh, const json::Dict& json_bus);
+            const json::Node ProcessMapQuery(RequestHandler& rh, const json::Dict& json_map);
 
-            void ProcessQueries(/*std::ostream& out, */ RequestHandler& rh, const json::Array& json_arr);
+            void ProcessQueries(std::ostream& out, RequestHandler& rh, const json::Array& json_arr);
 
             const svg::Color GetColor(const json::Node& color);
 

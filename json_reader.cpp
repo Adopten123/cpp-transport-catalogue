@@ -8,7 +8,7 @@ namespace transport {
 		using namespace std::literals;
 
 		void JSONreader::ProcessJSON(TransportCatalogue& tc, RequestHandler& rh, renderer::MapRenderer & mr,
-			std::istream& input /*, std::ostream& output*/) {
+			std::istream& input, std::ostream& output) {
 
 			const json::Dict json_dict = json::Load(input).GetRoot().AsMap();
 
@@ -27,7 +27,7 @@ namespace transport {
 			const auto stat_requests_it = json_dict.find("stat_requests"s);
 
 			if (stat_requests_it != json_dict.end()) {
-				ProcessQueries(/*output,*/ rh, stat_requests_it->second.AsArray());
+				ProcessQueries(output, rh, stat_requests_it->second.AsArray());
 			}
 
 		}
@@ -104,10 +104,10 @@ namespace transport {
 			tc.AddBus(std::move(bus));
 		}
 
-		void JSONreader::ProcessQueries(/*std::ostream& out, */ RequestHandler& rh, const json::Array& json_arr) {
+		void JSONreader::ProcessQueries(std::ostream& out, RequestHandler& rh, const json::Array& json_arr) {
 
 			json::Array completed_queries;
-			int c = 0;
+			//int c = 0;
 			try {
 				for (const auto& query : json_arr) {
 					const auto request_type = query.AsMap().find("type"s);
@@ -121,13 +121,17 @@ namespace transport {
 							completed_queries.emplace_back(ProcessBusQuery(rh, query.AsMap()));
 						}
 
+						else if (request_type->second.AsString() == "Map"s) {
+							completed_queries.emplace_back(ProcessMapQuery(rh, query.AsMap()));
+						}
+
 					}
-					c++;
+					//c++;
 				}
-				//json::Print(json::Document{ completed_queries }, out);
+				json::Print(json::Document{ completed_queries }, out);
 			}
 			catch(...){
-				std::cerr << c << std::endl;
+				//std::cerr << c << std::endl;
 			}
 
 
@@ -171,6 +175,18 @@ namespace transport {
 
 			return json::Dict{ {"request_id"s, json_bus.at("id"s).AsInt()},
 						  {"error_message"s, "not found"s} };
+		}
+
+		const json::Node JSONreader::ProcessMapQuery(RequestHandler& rh, const json::Dict& json_map) {
+			json::Dict result;
+			result["request_id"] = json_map.at("id").AsInt();
+
+			std::ostringstream strm;
+			svg::Document map = rh.RenderMap();
+			map.Render(strm);
+			result["map"] = strm.str();
+
+			return json::Node{ result };
 		}
 
 		const svg::Color JSONreader::GetColor(const json::Node& color)

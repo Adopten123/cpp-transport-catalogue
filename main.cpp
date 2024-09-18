@@ -19,7 +19,7 @@ int main()
     transport::renderer::MapRenderer mr;
     transport::RequestHandler rh(tc, mr);
     transport::reader::JSONreader jr;
-    jr.ProcessJSON(tc, rh, mr, std::cin);
+    jr.ProcessJSON(tc, rh, mr, std::cin, std::cout);
     //rh.RenderMap().Render(out);
-    rh.RenderMap().Render(std::cout);
+    //rh.RenderMap().Render(std::cout);
 }
