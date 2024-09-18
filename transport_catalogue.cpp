@@ -1,6 +1,7 @@
 #include "transport_catalogue.h"
 
 #include <algorithm>
+#include <memory>
 #include <set>
 #include <stdexcept>
 
@@ -73,13 +74,9 @@ namespace transport {
 		return (result > 0 ? result : GetDistanceDirectly(to, from));
 	}
 
-	std::optional<domain::BusInfo> TransportCatalogue::GetBusInfo(const domain::Bus* bus) const {
+	domain::BusInfo TransportCatalogue::GetBusInfo(const domain::Bus* bus) const {
 
 		domain::BusInfo bus_info;
-
-		if (!bus) {
-			return bus_info;
-		}
 
 		bus_info.stops_count_ = bus->stops_.size();
 
@@ -99,6 +96,14 @@ namespace transport {
 		return bus_info;
 	}
 
+	const std::map<std::string_view, domain::Bus*> TransportCatalogue::GetAllBuses() const {
+		std::map<std::string_view, domain::Bus*> result;
 
+		for (const auto& bus : busname_to_bus_) {
+			result.emplace(bus);
+		}
+
+		return result;
+	}
 
 }

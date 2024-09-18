@@ -19,7 +19,7 @@ namespace domain {
 		name_(name), coordinate_(coordinate) {}
 
 	Bus::Bus(const std::string& name, const std::vector<const Stop*>& stops) :
-		name_(name), stops_(stops) {
+		is_circular_(true), name_(name), stops_(stops) {
 	}
 
 	bool Bus::operator<(Bus& other) {

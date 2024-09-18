@@ -1,8 +1,9 @@
+#include "json_reader.h"   
+#include "map_renderer.h"
 #include "request_handler.h"    
-#include "json_reader.h"        
 
-#include <iostream>     
 #include <fstream>
+#include <iostream>     
 #include <sstream>
 #include <string>
 
@@ -11,12 +12,14 @@ using namespace std::literals;
 
 int main()
 {
+    //std::ifstream in ("input.txt"s);
+    //std::ofstream out("output.svg"s);
+
     transport::TransportCatalogue tc;
-    transport::RequestHandler rh(tc);
+    transport::renderer::MapRenderer mr;
+    transport::RequestHandler rh(tc, mr);
     transport::reader::JSONreader jr;
-
-    std::ifstream in ("input.txt"s);
-    std::ofstream out("output.txt"s);
-
-    jr.ProcessJSON(tc, rh, in, out);
+    jr.ProcessJSON(tc, rh, mr, std::cin);
+    //rh.RenderMap().Render(out);
+    rh.RenderMap().Render(std::cout);
 }

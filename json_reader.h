@@ -5,16 +5,17 @@
  * а также код обработки запросов к базе и формирование массива ответов в формате JSON
  */
 #include "json.h"
-#include "transport_catalogue.h"
+#include "map_renderer.h"
 #include "request_handler.h"
+#include "transport_catalogue.h"
 
 namespace transport {
     namespace reader {
         class JSONreader {
         public:
 
-            void ProcessJSON(TransportCatalogue& tc, RequestHandler& rh,
-                std::istream& input, std::ostream& output);
+            void ProcessJSON(TransportCatalogue& tc, RequestHandler& rh, renderer::MapRenderer& mr,
+                std::istream& input/*, std::ostream& output*/);
 
         private:
 
@@ -29,7 +30,11 @@ namespace transport {
             const json::Node ProcessStopQuery(RequestHandler& rh, const json::Dict& json_stop);
             const json::Node ProcessBusQuery(RequestHandler& rh, const json::Dict& json_bus);
 
-            void ProcessQueries(std::ostream& out, RequestHandler& rh, const json::Array& json_arr);
+            void ProcessQueries(/*std::ostream& out, */ RequestHandler& rh, const json::Array& json_arr);
+
+            const svg::Color GetColor(const json::Node& color);
+
+            void LoadRendererSettings(renderer::MapRenderer& mr, const json::Dict& json_dict);
 
 
         };

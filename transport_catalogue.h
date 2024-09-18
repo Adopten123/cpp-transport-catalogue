@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <map>
 
 namespace transport{
 
@@ -42,7 +43,8 @@ namespace transport{
 
 		size_t GetDistanceDirectly(domain::Stop* from, domain::Stop* to) const;
 		size_t GetDistance(domain::Stop* from, domain::Stop* to) const;
-		std::optional<domain::BusInfo> GetBusInfo(const domain::Bus* bus) const;
+		domain::BusInfo GetBusInfo(const domain::Bus* bus) const;
+		const std::map<std::string_view, domain::Bus*> GetAllBuses() const;
 
 	private:
 

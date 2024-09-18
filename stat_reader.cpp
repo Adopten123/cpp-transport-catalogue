@@ -24,7 +24,7 @@ namespace transport {
             const domain::Bus* bus = tansport_catalogue.GetBus(bus_name);
 
             if (bus) {
-                domain::BusInfo businfo = tansport_catalogue.GetBusInfo(bus).value();
+                domain::BusInfo businfo = tansport_catalogue.GetBusInfo(bus);
 
                 output << "Bus "s << bus_name << ": "s << to_string(businfo.stops_count_) << " stops on route, "s
                     << to_string(businfo.unique_stops_count_) << " unique stops, "s << to_string(businfo.route_length_) << " route length, "s

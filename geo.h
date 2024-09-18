@@ -17,5 +17,11 @@ namespace transport {
         };
 
         double ComputeDistance(Coordinates from, Coordinates to);
+
+        class CoordinateHasher {
+        public:
+            std::size_t operator()(const Coordinates& coords) const;
+        };
+
     }
 }

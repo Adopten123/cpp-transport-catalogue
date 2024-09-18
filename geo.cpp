@@ -31,6 +31,11 @@ namespace transport {
                 * earth_radius;
         }
 
+        std::size_t CoordinateHasher::operator()(const Coordinates& coords) const
+        {
+            return static_cast<std::size_t>(coords.lat + 17 * coords.lng);
+        }
+
     }  // namespace geo
 
 } //namesapce transport
