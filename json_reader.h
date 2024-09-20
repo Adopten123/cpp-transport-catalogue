@@ -13,7 +13,7 @@
 
 namespace transport {
     namespace reader {
-        class JSONreader {
+        class JsonReader {
         public:
 
             void ProcessJSON(TransportCatalogue& tc, RequestHandler& rh, renderer::MapRenderer& mr,

@@ -7,7 +7,7 @@ namespace transport {
 
 		using namespace std::literals;
 
-		void JSONreader::ProcessJSON(TransportCatalogue& tc, RequestHandler& rh, renderer::MapRenderer & mr,
+		void JsonReader::ProcessJSON(TransportCatalogue& tc, RequestHandler& rh, renderer::MapRenderer & mr,
 			std::istream& input, std::ostream& output) {
 
 			const json::Dict json_dict = json::Load(input).GetRoot().AsMap();
@@ -32,7 +32,7 @@ namespace transport {
 
 		}
 
-		void JSONreader::FillCatalogue(TransportCatalogue& tc, const json::Array& json_arr) {
+		void JsonReader::FillCatalogue(TransportCatalogue& tc, const json::Array& json_arr) {
 
 			json::Array bus_arr;
 
@@ -71,13 +71,13 @@ namespace transport {
 
 		}
 
-		void JSONreader::AddStopData(TransportCatalogue& tc, const json::Dict& json_stop) {
+		void JsonReader::AddStopData(TransportCatalogue& tc, const json::Dict& json_stop) {
 			tc.AddStop(domain::Stop{ json_stop.at("name"s).AsString(),
 				{json_stop.at("latitude"s).AsDouble(),
 				json_stop.at("longitude"s).AsDouble()} });
 		}
 
-		void JSONreader::AddStopDistance(TransportCatalogue& tc, const json::Dict& json_stop) {
+		void JsonReader::AddStopDistance(TransportCatalogue& tc, const json::Dict& json_stop) {
 
 			const domain::Stop* from_ptr = tc.GetStop(json_stop.at("name"s).AsString());
 
@@ -90,7 +90,7 @@ namespace transport {
 			}
 		}
 
-		void JSONreader::AddBusData(TransportCatalogue& tc, const json::Dict& json_bus) {
+		void JsonReader::AddBusData(TransportCatalogue& tc, const json::Dict& json_bus) {
 			domain::Bus bus;
 			bus.name_ = json_bus.at("name"s).AsString();
 			bus.is_circular_ = json_bus.at("is_roundtrip"s).AsBool();
@@ -104,7 +104,7 @@ namespace transport {
 			tc.AddBus(std::move(bus));
 		}
 
-		void JSONreader::ProcessQueries(std::ostream& out, RequestHandler& rh, const json::Array& json_arr) {
+		void JsonReader::ProcessQueries(std::ostream& out, RequestHandler& rh, const json::Array& json_arr) {
 
 			json::Array completed_queries;
 			//int c = 0;
@@ -137,7 +137,7 @@ namespace transport {
 
 		}
 
-		const json::Node JSONreader::ProcessStopQuery(RequestHandler& rh, const json::Dict& json_stop) {
+		const json::Node JsonReader::ProcessStopQuery(RequestHandler& rh, const json::Dict& json_stop) {
 			const auto stop_query_ptr = rh.GetBusesByStop(
 				json_stop.at("name"s).AsString()
 			);
@@ -160,7 +160,7 @@ namespace transport {
 
 		}
 
-		const json::Node JSONreader::ProcessBusQuery(RequestHandler& rh, const json::Dict& json_bus) {
+		const json::Node JsonReader::ProcessBusQuery(RequestHandler& rh, const json::Dict& json_bus) {
 
 			if (const auto bus_query_ptr = rh.GetBusStat(
 				json_bus.at("name"s).AsString())) {
@@ -177,7 +177,7 @@ namespace transport {
 						  {"error_message"s, "not found"s} };
 		}
 
-		const json::Node JSONreader::ProcessMapQuery(RequestHandler& rh, const json::Dict& json_map) {
+		const json::Node JsonReader::ProcessMapQuery(RequestHandler& rh, const json::Dict& json_map) {
 			json::Dict result;
 			result["request_id"] = json_map.at("id").AsInt();
 
@@ -189,7 +189,7 @@ namespace transport {
 			return json::Node{ result };
 		}
 
-		const svg::Color JSONreader::GetColor(const json::Node& color)
+		const svg::Color JsonReader::GetColor(const json::Node& color)
 		{
 			if (color.IsString())
 			{
@@ -220,7 +220,7 @@ namespace transport {
 			return svg::Color();
 		}
 
-		void JSONreader::LoadRendererSettings(renderer::MapRenderer& mr, const json::Dict& json_dict) {
+		void JsonReader::LoadRendererSettings(renderer::MapRenderer& mr, const json::Dict& json_dict) {
 			renderer::RendererSettings loaded_settings;
 
 			loaded_settings.width = json_dict.at("width").AsDouble();
