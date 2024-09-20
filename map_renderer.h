@@ -90,31 +90,31 @@ namespace transport {
             double zoom_coeff_ = 0;
         };
 
-		struct RendererSettings {
-			double width = 0.0;
-			double height = 0.0;
+        struct RendererSettings {
+            double width = 0.0;
+            double height = 0.0;
 
-			double padding = 0.0;
+            double padding = 0.0;
 
             double stop_radius = 0.0;
-			double line_width = 0.0;
+            double line_width = 0.0;
 
-			int bus_label_font_size = 0;
-			svg::Point bus_label_offset = { 0.0, 0.0 };
+            int bus_label_font_size = 0;
+            svg::Point bus_label_offset = { 0.0, 0.0 };
 
-			int stop_label_font_size = 0;
-			svg::Point stop_label_offset = { 0.0, 0.0 };
+            int stop_label_font_size = 0;
+            svg::Point stop_label_offset = { 0.0, 0.0 };
 
-			svg::Color underlayer_color = svg::Rgba{ 0, 0, 0, 0.0 };
-			double underlayer_width = 0.0;
+            svg::Color underlayer_color = svg::Rgba{ 0, 0, 0, 0.0 };
+            double underlayer_width = 0.0;
 
-			std::vector<svg::Color> color_palette;
-		};
+            std::vector<svg::Color> color_palette;
+        };
 
         class RouteLine : public svg::Drawable {
         public:
 
-            RouteLine(const std::vector<svg::Point> points, svg::Color stroke_color, const RendererSettings& settings);
+            RouteLine(const std::vector<svg::Point>& points, svg::Color stroke_color, const RendererSettings& settings);
             void Draw(svg::ObjectContainer&) const override;
 
         private:
@@ -124,16 +124,15 @@ namespace transport {
             const RendererSettings& settings_;
         };
 
-
-		class MapRenderer {
-		public:
+        class MapRenderer {
+        public:
             MapRenderer() = default;
             MapRenderer(const RendererSettings& render_settings);
 
             svg::Document RenderSVG(const std::map<std::string_view, domain::Bus*> busname_to_bus) const;
 
 
-		private:
+        private:
 
             svg::Polyline RenderPolyline(std::vector<const domain::Stop*> route_stops, size_t& color_count, const SphereProjector& sp) const;
 
@@ -148,7 +147,7 @@ namespace transport {
             std::vector<svg::Circle> GetStopIcons(const std::map<std::string_view, const domain::Stop*>& stops, const SphereProjector& sp) const;
             std::vector<svg::Text> GetStopnameLabels(const std::map<std::string_view, const domain::Stop*>& stops, const SphereProjector& sp) const;
 
-			RendererSettings settings_;
-		};
+            RendererSettings settings_;
+        };
 	}
 }
