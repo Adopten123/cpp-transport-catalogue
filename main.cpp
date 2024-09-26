@@ -12,8 +12,8 @@ using namespace std::literals;
 
 int main()
 {
-    //std::ifstream in ("input.txt"s);
-    //std::ofstream out("output.svg"s);
+    std::ifstream in ("s10_final_opentest_1.txt"s);
+    std::ofstream out("output_s10_final_opentest_1.txt"s);
 
     transport::TransportCatalogue tc;
     transport::renderer::MapRenderer mr;

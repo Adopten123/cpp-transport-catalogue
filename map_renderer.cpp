@@ -26,7 +26,7 @@ namespace transport {
 
 		//------------------------ RoteLine -------------------------
 
-		RouteLine::RouteLine(const std::vector<svg::Point> points, svg::Color stroke_color, const RendererSettings& settings) :
+		RouteLine::RouteLine(const std::vector<svg::Point>& points, svg::Color stroke_color, const RendererSettings& settings) :
 			points_(points), stroke_color_(stroke_color), settings_(settings){}
 
 		void RouteLine::Draw(svg::ObjectContainer& container) const
