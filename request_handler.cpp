@@ -2,8 +2,8 @@
 
 namespace transport {
 
-	RequestHandler::RequestHandler(const TransportCatalogue& db, const renderer::MapRenderer& renderer) :
-		db_(db), renderer_(renderer) {
+	RequestHandler::RequestHandler(const TransportCatalogue& db, const renderer::MapRenderer& renderer, const TransportRouter& tr) :
+		db_(db), renderer_(renderer), tr_(tr) {
 	}
 
 	std::optional<domain::BusInfo> RequestHandler::GetBusStat(const std::string_view& bus_name) const {
@@ -27,6 +27,14 @@ namespace transport {
 
 	svg::Document RequestHandler::RenderMap() const {
 		return renderer_.RenderSVG(db_.GetAllBuses());
+	}
+
+	const std::optional<RequestHandler::Router::RouteInfo> RequestHandler::GetRoute(const std::string& from, const std::string& to) const {
+		return tr_.FindBus(from, to);
+	}
+
+	const RequestHandler::Graph& RequestHandler::GetGraph() const {
+		return tr_.GetGraph();
 	}
 
 }

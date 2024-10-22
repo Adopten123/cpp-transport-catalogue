@@ -8,7 +8,7 @@ namespace transport {
 
 		using namespace std::literals;
 
-		void JsonReader::ProcessJSON(TransportCatalogue& tc, RequestHandler& rh, renderer::MapRenderer & mr,
+		void JsonReader::ProcessJSON(TransportCatalogue& tc, renderer::MapRenderer& mr,
 			std::istream& input, std::ostream& output) {
 
 			const json::Dict json_dict = json::Load(input).GetRoot().AsDict();
@@ -19,11 +19,19 @@ namespace transport {
 				FillCatalogue(tc,base_requests_it->second.AsArray());
 			}
 
+
 			const auto renderer_settings_it = json_dict.find("render_settings"s);
 			if (renderer_settings_it != json_dict.cend())
 			{
 				LoadRendererSettings(mr, renderer_settings_it->second.AsDict());
 			}
+
+
+			const auto router_settings_it = json_dict.find("routing_settings"s);
+
+			const TransportRouter& tr = { {LoadRoutingSettings(router_settings_it->second.AsDict())}, tc };
+
+			transport::RequestHandler rh(tc, mr, tr);
 
 			const auto stat_requests_it = json_dict.find("stat_requests"s);
 
@@ -126,6 +134,11 @@ namespace transport {
 							completed_queries.emplace_back(ProcessMapQuery(rh, query.AsDict()));
 						}
 
+						else if (request_type->second.AsString() == "Route"s)
+						{
+							completed_queries.emplace_back(ProcessRoutingQuery(rh, query.AsDict()));
+						}
+
 					}
 					//c++;
 				}
@@ -213,6 +226,61 @@ namespace transport {
 				                            .Build() };
 		}
 
+		const json::Node JsonReader::ProcessRoutingQuery(RequestHandler& rh, const json::Dict& json_map) {
+			const int id = json_map.at("id"s).AsInt();
+			const std::string stop_from = json_map.at("from"s).AsString();
+			const std::string stop_to = json_map.at("to"s).AsString();
+			const auto& routing = rh.GetRoute(stop_from, stop_to);
+
+			if (routing) {
+				json::Array items;
+				double total_time = 0.0;
+				items.reserve(routing.value().edges.size());
+				for (auto& edge_id : routing.value().edges) {
+					const graph::Edge<double> edge = rh.GetGraph().GetEdge(edge_id);
+					if (edge.quality == 0) {
+						items.emplace_back(json::Node(json::Builder{}
+							.StartDict()
+							    .Key("stop_name"s).Value(edge.name)
+							    .Key("time"s).Value(edge.weight)
+							    .Key("type"s).Value("Wait"s)
+							.EndDict()
+						.Build()));
+
+						total_time += edge.weight;
+					}
+					else {
+						items.emplace_back(json::Node(json::Builder{}
+							.StartDict()
+							    .Key("bus"s).Value(edge.name)
+							    .Key("span_count"s).Value(static_cast<int>(edge.quality))
+							    .Key("time"s).Value(edge.weight)
+							    .Key("type"s).Value("Bus"s)
+							.EndDict()
+						.Build()));
+
+						total_time += edge.weight;
+					}
+				}
+				return json::Node{ json::Builder{}
+					.StartDict()
+						.Key("request_id"s).Value(id)
+						.Key("total_time"s).Value(total_time)
+						.Key("items"s).Value(items)
+					.EndDict()
+				.Build() };
+			}
+			else {
+				return json::Node{ json::Builder{}
+					.StartDict()
+						.Key("request_id"s).Value(id)
+						.Key("error_message"s).Value("not found"s)
+					.EndDict()
+				.Build()
+				};
+			}
+		}
+
 		const svg::Color JsonReader::GetColor(const json::Node& color)
 		{
 			if (color.IsString())
@@ -266,6 +334,15 @@ namespace transport {
 			}
 
 			mr = loaded_settings;
+		}
+
+		transport::RouterSettings JsonReader::LoadRoutingSettings(const json::Dict& json_dict) {
+			transport::RouterSettings loaded_settings;
+
+			loaded_settings.bus_velocity = json_dict.at("bus_velocity").AsInt();
+			loaded_settings.bus_wait_time = json_dict.at("bus_wait_time").AsInt();
+
+			return loaded_settings;
 		}
 	}
 }

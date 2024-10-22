@@ -8,6 +8,7 @@
 #include "map_renderer.h"
 #include "request_handler.h"
 #include "transport_catalogue.h"
+#include "transport_router.h"
 
 #include <sstream>
 
@@ -16,7 +17,7 @@ namespace transport {
         class JsonReader {
         public:
 
-            void ProcessJSON(TransportCatalogue& tc, RequestHandler& rh, renderer::MapRenderer& mr,
+            void ProcessJSON(TransportCatalogue& tc, renderer::MapRenderer& mr,
                 std::istream& input, std::ostream& output);
 
         private:
@@ -32,6 +33,7 @@ namespace transport {
             const json::Node ProcessStopQuery(RequestHandler& rh, const json::Dict& json_stop);
             const json::Node ProcessBusQuery(RequestHandler& rh, const json::Dict& json_bus);
             const json::Node ProcessMapQuery(RequestHandler& rh, const json::Dict& json_map);
+            const json::Node ProcessRoutingQuery(RequestHandler& rh, const json::Dict& json_map);
 
             void ProcessQueries(std::ostream& out, RequestHandler& rh, const json::Array& json_arr);
 
@@ -39,6 +41,7 @@ namespace transport {
 
             void LoadRendererSettings(renderer::MapRenderer& mr, const json::Dict& json_dict);
 
+            transport::RouterSettings LoadRoutingSettings(const json::Dict& json_dict);
 
         };
     }

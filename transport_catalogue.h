@@ -43,8 +43,11 @@ namespace transport{
 
 		size_t GetDistanceDirectly(domain::Stop* from, domain::Stop* to) const;
 		size_t GetDistance(domain::Stop* from, domain::Stop* to) const;
+
 		domain::BusInfo GetBusInfo(const domain::Bus* bus) const;
+
 		const std::map<std::string_view, domain::Bus*> GetAllBuses() const;
+		const std::map<std::string_view, domain::Stop*> GetAllStops() const;
 
 	private:
 

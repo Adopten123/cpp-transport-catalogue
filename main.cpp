@@ -17,9 +17,10 @@ int main()
 
     transport::TransportCatalogue tc;
     transport::renderer::MapRenderer mr;
-    transport::RequestHandler rh(tc, mr);
     transport::reader::JsonReader jr;
-    jr.ProcessJSON(tc, rh, mr, std::cin, std::cout);
+
+
+    jr.ProcessJSON(tc, mr, std::cin, std::cout);
     //rh.RenderMap().Render(out);
     //rh.RenderMap().Render(std::cout);
 }

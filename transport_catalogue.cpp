@@ -106,4 +106,14 @@ namespace transport {
 		return result;
 	}
 
+	const std::map<std::string_view, domain::Stop*> TransportCatalogue::GetAllStops() const {
+		std::map<std::string_view, domain::Stop*> result;
+
+		for (const auto& stop : stopname_to_stop_) {
+			result.emplace(stop);
+		}
+		
+		return result;
+	}
+
 }
