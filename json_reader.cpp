@@ -116,37 +116,33 @@ namespace transport {
 		void JsonReader::ProcessQueries(std::ostream& out, RequestHandler& rh, const json::Array& json_arr) {
 
 			json::Array completed_queries;
-			//int c = 0;
-			try {
-				for (const auto& query : json_arr) {
-					const auto request_type = query.AsDict().find("type"s);
-					if (request_type != query.AsDict().cend()) {
 
-						if (request_type->second.AsString() == "Stop"s) {
-							completed_queries.emplace_back(ProcessStopQuery(rh, query.AsDict()));
-						}
 
-						else if (request_type->second.AsString() == "Bus"s) {
-							completed_queries.emplace_back(ProcessBusQuery(rh, query.AsDict()));
-						}
+			for (const auto& query : json_arr) {
+				const auto request_type = query.AsDict().find("type"s);
+				if (request_type != query.AsDict().cend()) {
 
-						else if (request_type->second.AsString() == "Map"s) {
-							completed_queries.emplace_back(ProcessMapQuery(rh, query.AsDict()));
-						}
-
-						else if (request_type->second.AsString() == "Route"s)
-						{
-							completed_queries.emplace_back(ProcessRoutingQuery(rh, query.AsDict()));
-						}
-
+					if (request_type->second.AsString() == "Stop"s) {
+						completed_queries.emplace_back(ProcessStopQuery(rh, query.AsDict()));
 					}
-					//c++;
+
+					else if (request_type->second.AsString() == "Bus"s) {
+						completed_queries.emplace_back(ProcessBusQuery(rh, query.AsDict()));
+					}
+
+					else if (request_type->second.AsString() == "Map"s) {
+						completed_queries.emplace_back(ProcessMapQuery(rh, query.AsDict()));
+					}
+
+					else if (request_type->second.AsString() == "Route"s)
+					{
+						completed_queries.emplace_back(ProcessRoutingQuery(rh, query.AsDict()));
+					}
+
 				}
-				json::Print(json::Document{ completed_queries }, out);
+				//c++;
 			}
-			catch(...){
-				//std::cerr << c << std::endl;
-			}
+			json::Print(json::Document{ completed_queries }, out);
 
 
 		}
@@ -237,8 +233,8 @@ namespace transport {
 				double total_time = 0.0;
 
 				items.reserve(tr_info.info.value().edges.size());
-				for (auto& edge_id : tr_info.info.value().edges) {
-					const graph::Edge<double> edge = tr_info.graph.GetEdge(edge_id);
+				for (const auto& edge : tr_info.edges) {
+
 					if (edge.quality == 0) {
 						items.emplace_back(json::Node(json::Builder{}
 							.StartDict()
@@ -263,13 +259,16 @@ namespace transport {
 						total_time += edge.weight;
 					}
 				}
-				return json::Node{ json::Builder{}
+
+				auto res = json::Node{ json::Builder{}
 					.StartDict()
 						.Key("request_id"s).Value(id)
 						.Key("total_time"s).Value(total_time)
 						.Key("items"s).Value(items)
 					.EndDict()
 				.Build() };
+
+				return res;
 			}
 			else {
 				return json::Node{ json::Builder{}

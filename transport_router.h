@@ -24,7 +24,7 @@ namespace transport
 	public:
 
 		struct TRInfo {
-			const Graph& graph;
+			std::vector<graph::Edge<double>> edges;
 			std::optional<Router::RouteInfo> info;
 		};
 
@@ -53,5 +53,7 @@ namespace transport
 			Graph& graph, const TransportCatalogue& catalogue);
 
 		void BuildGraph(const TransportCatalogue& catalogue);
+
+		std::vector<graph::Edge<double>> GetEdges(Router::RouteInfo info) const;
 	};
 }

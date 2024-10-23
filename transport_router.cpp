@@ -33,7 +33,10 @@ namespace transport {
 		using namespace std;
 		using namespace graph;
 
-		const double TIME_CONST = 1000.0 / 60.0;
+		const double ONE_HOUR_PER_MINUTES = 60.0;
+		const double ONE_KILOMETER_PER_METER = 1000.0;
+
+		const double AVG_SPEED = ONE_KILOMETER_PER_METER / ONE_HOUR_PER_MINUTES; // скорость, требуемая для прохождения 1 километра за 1 час
 
 		for (const auto& [name, bus] : buses) {
 
@@ -65,7 +68,7 @@ namespace transport {
 						.quality = i_to - i_from,
 						.from = stop_ids_.at(stops[i_from]->name_) + 1,
 						.to = stop_ids_.at(stops[i_to]->name_),
-						.weight = static_cast<double>(road_distance) / (settings_.bus_velocity * (TIME_CONST))
+						.weight = static_cast<double>(road_distance) / (settings_.bus_velocity * (AVG_SPEED))
 						});
 
 					if (!bus->is_circular_) {
@@ -74,7 +77,7 @@ namespace transport {
 						.quality = i_to - i_from,
 						.from = stop_ids_.at(stops[i_to]->name_) + 1,
 						.to = stop_ids_.at(stops[i_from]->name_),
-						.weight = static_cast<double>(road_distance_inverse) / (settings_.bus_velocity * (TIME_CONST))
+						.weight = static_cast<double>(road_distance_inverse) / (settings_.bus_velocity * (AVG_SPEED))
 						});
 					}
 
@@ -99,8 +102,26 @@ namespace transport {
 		graph_ = std::move(graph);
 	}
 
+	std::vector<graph::Edge<double>> TransportRouter::GetEdges(Router::RouteInfo info) const {
+		std::vector<graph::Edge<double>> edges;
+
+		for (const auto& edge_id : info.edges) {
+			edges.push_back(graph_.GetEdge(edge_id));
+
+		}
+
+		return edges;
+	}
+
 	const TransportRouter::TRInfo TransportRouter::FindRoute(const std::string& from, const std::string& to) const {
-		return { graph_, router_->BuildRoute(stop_ids_.at(from), stop_ids_.at(to)) };
+
+		std::optional<Router::RouteInfo> temp_info = router_->BuildRoute(stop_ids_.at(from), stop_ids_.at(to));
+
+		if (!temp_info) {
+			return { {}, temp_info };
+		}
+
+		return { GetEdges(temp_info.value()), temp_info };
 	}
 
 
