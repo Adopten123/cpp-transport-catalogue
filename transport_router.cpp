@@ -97,12 +97,8 @@ namespace transport {
 		graph_ = std::move(graph);
 	}
 
-	const TransportRouter::Graph& TransportRouter::GetGraph() const {
-		return graph_;
-	}
-
-	const std::optional<TransportRouter::Router::RouteInfo> TransportRouter::FindBus(const std::string& from, const std::string& to) const {
-		return router_->BuildRoute(stop_ids_.at(from), stop_ids_.at(to));
+	const TransportRouter::TRInfo TransportRouter::FindRoute(const std::string& from, const std::string& to) const {
+		return { graph_, router_->BuildRoute(stop_ids_.at(from), stop_ids_.at(to)) };
 	}
 
 

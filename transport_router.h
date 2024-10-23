@@ -23,22 +23,21 @@ namespace transport
 
 	public:
 
+		struct TRInfo {
+			const Graph& graph;
+			std::optional<Router::RouteInfo> info;
+		};
+
 		TransportRouter() = default;
 
-		TransportRouter(RouterSettings settings)
-			: settings_(settings) {
-		}
-
-		TransportRouter(const TransportRouter& router, const TransportCatalogue& catalogue)
-			: settings_(router.settings_){
+		TransportRouter(RouterSettings settings, const TransportCatalogue& catalogue)
+			: settings_(settings){
 
 			BuildGraph(catalogue);
 			router_ = std::make_unique<Router>(graph_);
 		}
-		
-		const Graph& GetGraph() const;
 
-		const std::optional<Router::RouteInfo> FindBus(const std::string& from, const std::string& to) const;
+		const TRInfo FindRoute(const std::string& from, const std::string& to) const;
 
 	private:
 		RouterSettings settings_;

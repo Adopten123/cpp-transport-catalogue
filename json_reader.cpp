@@ -230,14 +230,15 @@ namespace transport {
 			const int id = json_map.at("id"s).AsInt();
 			const std::string stop_from = json_map.at("from"s).AsString();
 			const std::string stop_to = json_map.at("to"s).AsString();
-			const auto& routing = rh.GetRoute(stop_from, stop_to);
+			const auto tr_info = rh.GetRoute(stop_from, stop_to);
 
-			if (routing) {
+			if (tr_info.info) {
 				json::Array items;
 				double total_time = 0.0;
-				items.reserve(routing.value().edges.size());
-				for (auto& edge_id : routing.value().edges) {
-					const graph::Edge<double> edge = rh.GetGraph().GetEdge(edge_id);
+
+				items.reserve(tr_info.info.value().edges.size());
+				for (auto& edge_id : tr_info.info.value().edges) {
+					const graph::Edge<double> edge = tr_info.graph.GetEdge(edge_id);
 					if (edge.quality == 0) {
 						items.emplace_back(json::Node(json::Builder{}
 							.StartDict()

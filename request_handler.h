@@ -44,8 +44,7 @@ namespace transport {
         // Этот метод будет нужен в следующей части итогового проекта
         svg::Document RenderMap() const;
 
-        const std::optional<Router::RouteInfo> GetRoute(const std::string& from, const std::string& to) const;
-        const Graph& GetGraph() const;
+        const TransportRouter::TRInfo GetRoute(const std::string& from, const std::string& to) const;
 
     private:
         // RequestHandler использует агрегацию объектов "Транспортный Справочник" и "Визуализатор Карты"

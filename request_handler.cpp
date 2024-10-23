@@ -29,12 +29,8 @@ namespace transport {
 		return renderer_.RenderSVG(db_.GetAllBuses());
 	}
 
-	const std::optional<RequestHandler::Router::RouteInfo> RequestHandler::GetRoute(const std::string& from, const std::string& to) const {
-		return tr_.FindBus(from, to);
-	}
-
-	const RequestHandler::Graph& RequestHandler::GetGraph() const {
-		return tr_.GetGraph();
+	const TransportRouter::TRInfo RequestHandler::GetRoute(const std::string& from, const std::string& to) const {
+		return tr_.FindRoute(from, to);
 	}
 
 }
