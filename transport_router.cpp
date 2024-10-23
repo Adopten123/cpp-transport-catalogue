@@ -33,6 +33,8 @@ namespace transport {
 		using namespace std;
 		using namespace graph;
 
+		const double TIME_CONST = 1000.0 / 60.0;
+
 		for (const auto& [name, bus] : buses) {
 
 			const vector<const domain::Stop*>& stops = bus->stops_;
@@ -63,7 +65,7 @@ namespace transport {
 						.quality = i_to - i_from,
 						.from = stop_ids_.at(stops[i_from]->name_) + 1,
 						.to = stop_ids_.at(stops[i_to]->name_),
-						.weight = static_cast<double>(road_distance) / (settings_.bus_velocity * (100.0 / 6.0))
+						.weight = static_cast<double>(road_distance) / (settings_.bus_velocity * (TIME_CONST))
 						});
 
 					if (!bus->is_circular_) {
@@ -72,7 +74,7 @@ namespace transport {
 						.quality = i_to - i_from,
 						.from = stop_ids_.at(stops[i_to]->name_) + 1,
 						.to = stop_ids_.at(stops[i_from]->name_),
-						.weight = static_cast<double>(road_distance_inverse) / (settings_.bus_velocity * (100.0 / 6.0))
+						.weight = static_cast<double>(road_distance_inverse) / (settings_.bus_velocity * (TIME_CONST))
 						});
 					}
 
